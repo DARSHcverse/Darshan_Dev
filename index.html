@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Darshan Subramaniam — Full-Stack Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #f6f6f4;
+    --black: #0c0c0c;
+    --mid: #555;
+    --faint: #bbb;
+    --blue: #1455f0;
+    --blue-light: #edf0ff;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+    --border: rgba(12,12,12,0.1);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--black); font-family: var(--sans); font-weight: 300; -webkit-font-smoothing: antialiased; }
+  .container { max-width: 780px; margin: 0 auto; padding: 0 2rem; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(246,246,244,0.93); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+  .nav-inner { max-width: 780px; margin: 0 auto; padding: 0 2rem; height: 54px; display: flex; justify-content: space-between; align-items: center; }
+  .nav-logo { font-family: var(--mono); font-size: 0.76rem; color: var(--black); letter-spacing: 0.02em; }
+  .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+  .nav-links a { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.05em; color: var(--mid); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--black); }
+
+  /* HERO — full bleed split */
+  #hero { padding-top: 54px; min-height: 100vh; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr 420px; }
+  .hero-left { display: flex; align-items: center; padding: 5rem 3rem 5rem 0; }
+  .hero-left-pad { padding-left: 2rem; max-width: 780px; width: 100%; }
+  .hero-left-inner { max-width: 360px; }
+  .hero-status { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em; color: var(--mid); margin-bottom: 2rem; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; animation: blink 2.4s ease-in-out infinite; flex-shrink: 0; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+  .hero-name { font-size: clamp(2.2rem, 4.5vw, 3.6rem); font-weight: 300; line-height: 1.12; letter-spacing: -0.03em; margin-bottom: 0.3rem; }
+  .hero-name em { font-style: normal; color: var(--blue); }
+  .hero-role { font-family: var(--mono); font-size: 0.73rem; color: var(--mid); letter-spacing: 0.05em; margin-bottom: 1.8rem; }
+  .hero-bio { font-size: 0.95rem; line-height: 1.85; color: var(--mid); margin-bottom: 2.2rem; font-weight: 300; }
+  .hero-actions { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
+  .btn { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; text-decoration: none; display: inline-block; transition: all 0.2s; border: none; cursor: pointer; }
+  .btn-fill { background: var(--black); color: var(--bg); padding: 0.6rem 1.3rem; }
+  .btn-fill:hover { background: var(--blue); }
+  .btn-ghost { color: var(--mid); border-bottom: 1px solid var(--faint); padding-bottom: 2px; background: none; }
+  .btn-ghost:hover { color: var(--black); border-color: var(--black); }
+
+  /* HERO PHOTO */
+  .hero-photo { position: relative; overflow: hidden; height: calc(100vh - 54px); }
+  .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; display: block; }
+  .hero-photo::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, var(--bg) 0%, rgba(246,246,244,0.15) 30%, transparent 60%); z-index: 1; pointer-events: none; }
+  .hero-photo::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: linear-gradient(to top, var(--bg), transparent); z-index: 1; pointer-events: none; }
+
+  /* SECTIONS */
+  section { border-bottom: 1px solid var(--border); }
+  .section-inner { padding: 5rem 0; }
+  .section-header { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 3rem; }
+  .section-num { font-family: var(--mono); font-size: 0.66rem; color: var(--faint); letter-spacing: 0.06em; flex-shrink: 0; }
+  .section-title { font-size: 1.45rem; font-weight: 400; letter-spacing: -0.02em; }
+
+  /* ABOUT */
+  .about-grid { display: grid; grid-template-columns: 220px 1fr; gap: 3.5rem; align-items: start; }
+  .about-photo img { width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: center top; display: block; }
+  .about-photo-caption { font-family: var(--mono); font-size: 0.62rem; color: var(--faint); letter-spacing: 0.06em; margin-top: 0.6rem; }
+  .about-content p { font-size: 0.95rem; line-height: 1.85; color: var(--mid); margin-bottom: 1.1rem; }
+  .about-content strong { color: var(--black); font-weight: 500; }
+  .about-meta { margin-top: 1.8rem; }
+  .meta-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.75rem 0; border-bottom: 1px solid var(--border); font-size: 0.84rem; }
+  .meta-row:first-child { border-top: 1px solid var(--border); }
+  .meta-key { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.06em; color: var(--faint); }
+  .meta-val { color: var(--black); font-weight: 400; }
+  .meta-val.blue { color: var(--blue); }
+
+  /* SKILLS */
+  .skill-row { display: grid; grid-template-columns: 130px 1fr; gap: 2rem; padding: 1.3rem 0; border-bottom: 1px solid var(--border); align-items: start; }
+  .skill-row:first-child { border-top: 1px solid var(--border); }
+  .skill-cat { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em; color: var(--mid); padding-top: 3px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+  .chip { font-family: var(--mono); font-size: 0.7rem; padding: 0.28rem 0.7rem; background: white; border: 1px solid var(--border); color: var(--black); transition: border-color 0.2s, color 0.2s; cursor: default; }
+  .chip:hover { border-color: var(--blue); color: var(--blue); }
+  .chip.hi { background: var(--blue-light); border-color: transparent; color: var(--blue); }
+
+  /* PROJECTS */
+  .project-item { display: grid; grid-template-columns: 1fr auto; gap: 2rem; padding: 2rem 0; border-bottom: 1px solid var(--border); align-items: start; transition: opacity 0.22s; }
+  .project-item:first-child { border-top: 1px solid var(--border); }
+  .project-item:hover { opacity: 0.6; }
+  .proj-meta { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.45rem; flex-wrap: wrap; }
+  .proj-year { font-family: var(--mono); font-size: 0.65rem; color: var(--faint); letter-spacing: 0.06em; }
+  .proj-badge { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.06em; padding: 0.15rem 0.5rem; background: var(--blue-light); color: var(--blue); }
+  .proj-name { font-size: 1.05rem; font-weight: 400; margin-bottom: 0.45rem; letter-spacing: -0.01em; }
+  .proj-desc { font-size: 0.87rem; color: var(--mid); line-height: 1.7; margin-bottom: 0.85rem; max-width: 460px; }
+  .proj-stack { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .stack-tag { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.04em; color: var(--mid); background: rgba(12,12,12,0.05); padding: 0.18rem 0.45rem; }
+  .proj-links { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; padding-top: 0.5rem; }
+  .proj-link { font-family: var(--mono); font-size: 0.66rem; color: var(--mid); text-decoration: none; transition: color 0.2s; white-space: nowrap; letter-spacing: 0.04em; }
+  .proj-link:hover { color: var(--blue); }
+  .proj-link.primary { color: var(--black); font-weight: 500; }
+
+  /* EXPERIENCE */
+  .exp-item { padding: 1.8rem 0; border-bottom: 1px solid var(--border); }
+  .exp-item:first-child { border-top: 1px solid var(--border); }
+  .exp-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.3rem; flex-wrap: wrap; gap: 0.5rem; }
+  .exp-role { font-size: 1rem; font-weight: 400; }
+  .exp-period { font-family: var(--mono); font-size: 0.65rem; color: var(--faint); letter-spacing: 0.05em; }
+  .exp-company { font-family: var(--mono); font-size: 0.7rem; color: var(--blue); letter-spacing: 0.04em; margin-bottom: 0.8rem; }
+  .exp-points { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+  .exp-points li { font-size: 0.87rem; color: var(--mid); line-height: 1.65; padding-left: 1rem; position: relative; }
+  .exp-points li::before { content: '—'; position: absolute; left: 0; color: var(--faint); font-family: var(--mono); }
+
+  /* EDUCATION */
+  .edu-item { padding: 1.4rem 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: start; gap: 2rem; }
+  .edu-item:first-child { border-top: 1px solid var(--border); }
+  .edu-degree { font-size: 0.97rem; font-weight: 400; margin-bottom: 0.3rem; }
+  .edu-school { font-family: var(--mono); font-size: 0.7rem; color: var(--mid); letter-spacing: 0.04em; }
+  .edu-year { font-family: var(--mono); font-size: 0.65rem; color: var(--faint); letter-spacing: 0.05em; white-space: nowrap; flex-shrink: 0; }
+
+  /* CONTACT */
+  #contact .section-inner { padding-bottom: 7rem; }
+  .contact-body { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+  .contact-intro p { font-size: 0.95rem; line-height: 1.85; color: var(--mid); margin-bottom: 1.1rem; }
+  .social-links { display: flex; flex-direction: column; margin-top: 1.8rem; }
+  .social-link { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid var(--border); text-decoration: none; color: var(--black); transition: opacity 0.2s; }
+  .social-link:first-child { border-top: 1px solid var(--border); }
+  .social-link:hover { opacity: 0.45; }
+  .social-name { font-size: 0.88rem; }
+  .social-handle { font-family: var(--mono); font-size: 0.68rem; color: var(--mid); letter-spacing: 0.04em; }
+
+  /* CONTACT FORM — powered by Formspree */
+  .cform { display: flex; flex-direction: column; }
+  .cfield { display: flex; flex-direction: column; border-bottom: 1px solid var(--border); padding: 0.55rem 0; }
+  .cfield:first-child { border-top: 1px solid var(--border); }
+  .cfield label { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.08em; color: var(--faint); margin-bottom: 0.25rem; text-transform: lowercase; }
+  .cfield input, .cfield textarea { background: transparent; border: none; outline: none; font-family: var(--sans); font-size: 0.9rem; color: var(--black); font-weight: 300; resize: none; width: 100%; }
+  .cfield input::placeholder, .cfield textarea::placeholder { color: var(--faint); }
+  .cfield textarea { height: 90px; }
+  .form-foot { display: flex; justify-content: space-between; align-items: center; padding-top: 1.4rem; gap: 1rem; }
+  .form-note { font-family: var(--mono); font-size: 0.62rem; color: var(--faint); letter-spacing: 0.04em; }
+  .form-success { display: none; font-family: var(--mono); font-size: 0.72rem; color: #166534; letter-spacing: 0.04em; padding: 1rem 0; }
+
+  /* FOOTER */
+  footer { padding: 1.4rem 0; }
+  .footer-inner { max-width: 780px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-family: var(--mono); font-size: 0.62rem; color: var(--faint); }
+  .footer-back { font-family: var(--mono); font-size: 0.62rem; color: var(--faint); text-decoration: none; transition: color 0.2s; }
+  .footer-back:hover { color: var(--black); }
+
+  /* REVEAL */
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (max-width: 740px) {
+    #hero { grid-template-columns: 1fr; }
+    .hero-photo { display: none; }
+    .hero-left { padding: 3rem 0 3rem 0; }
+    .about-grid { grid-template-columns: 1fr; }
+    .contact-body { grid-template-columns: 1fr; }
+    .skill-row { grid-template-columns: 1fr; gap: 0.5rem; }
+    .project-item { grid-template-columns: 1fr; }
+    .proj-links { flex-direction: row; }
+    .edu-item { flex-direction: column; gap: 0.3rem; }
+    .nav-links { gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo">darshan.dev</span>
+    <ul class="nav-links">
+      <li><a href="#about">about</a></li>
+      <li><a href="#skills">skills</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#experience">experience</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-left-pad">
+      <div class="hero-left-inner reveal">
+        <div class="hero-status"><span class="dot"></span>open to opportunities</div>
+        <h1 class="hero-name">Full-Stack<br><em>Developer.</em></h1>
+        <p class="hero-role">Darshan Subramaniam &nbsp;/&nbsp; Melbourne, AU</p>
+        <p class="hero-bio">IT graduate from Deakin University building end-to-end web and mobile applications — from polished interfaces to cloud-deployed backends. Currently interning while shipping live products used by real businesses.</p>
+        <div class="hero-actions">
+          <a href="#projects" class="btn btn-fill">View projects</a>
+          <a href="#contact" class="btn btn-ghost">Get in touch →</a>
+          <a href="https://github.com/DARSHcverse?tab=repositories" target="_blank" class="btn btn-ghost">GitHub ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-photo">
+    <img src="https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1200&q=60" alt="hero photo"/>
+  </div>
+</section>
+
+<section id="about" class="section-inner">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">About</h2>
+    </div>
+    <div class="about-grid">
+      <div>
+        <div class="about-photo">
+          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=60" alt="portrait"/>
+          <div class="about-photo-caption">melbourne — au</div>
+        </div>
+      </div>
+      <div class="about-content">
+        <p>Hi — I'm Darshan. I build simple, usable interfaces and reliable backends. I enjoy designing backend APIs, connecting them to performant frontends, and shipping end-to-end features.</p>
+        <p>I like small teams, pragmatic engineering, and products that serve real users. I use React, Node, and cloud platforms to deliver production-ready apps.</p>
+        <div class="about-meta">
+          <div class="meta-row"><div class="meta-key">available</div><div class="meta-val blue">immediately</div></div>
+          <div class="meta-row"><div class="meta-key">email</div><div class="meta-val">hello@darshan.dev</div></div>
+          <div class="meta-row"><div class="meta-key">resume</div><div class="meta-val">/resume.pdf</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills" class="section-inner">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Skills</h2>
+    </div>
+    <div>
+      <div class="skill-row">
+        <div class="skill-cat">frontend</div>
+        <div class="chips"><span class="chip hi">React</span><span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">Svelte</span></div>
+      </div>
+      <div class="skill-row">
+        <div class="skill-cat">backend</div>
+        <div class="chips"><span class="chip">Node.js</span><span class="chip">Express</span><span class="chip">Postgres</span><span class="chip">Redis</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="section-inner">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Projects</h2>
+    </div>
+    <div>
+      <div class="project-item">
+        <div>
+          <div class="proj-meta"><span class="proj-year">2025</span><span class="proj-badge">Side project</span></div>
+          <div class="proj-name">DoBook</div>
+          <div class="proj-desc">A booking platform for small services using serverless and Stripe.</div>
+          <div class="proj-stack"><span class="stack-tag">React</span><span class="stack-tag">Node</span><span class="stack-tag">Vercel</span></div>
+        </div>
+        <div class="proj-links"><a class="proj-link primary" href="#">Live</a><a class="proj-link" href="#">Code</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience" class="section-inner">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Experience</h2>
+    </div>
+    <div>
+      <div class="exp-item">
+        <div class="exp-header"><div>
+          <div class="exp-role">Software Engineer Intern</div>
+          <div class="exp-company">Acme Corp</div>
+        </div><div class="exp-period">2024 — present</div></div>
+        <ul class="exp-points"><li>Built internal tooling for analytics</li><li>Improved API performance</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="section-inner">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Contact</h2>
+    </div>
+    <div class="contact-body">
+      <div class="contact-intro">
+        <p>I'm available for freelance and full-time roles. Reach out and let's chat.</p>
+        <div class="social-links">
+          <a href="https://www.linkedin.com/in/darshhpe" target="_blank" class="social-link"><span class="social-name">LinkedIn</span><span class="social-handle">in/darshhpe ↗</span></a>
+          <a href="https://github.com/DARSHcverse?tab=repositories" target="_blank" class="social-link"><span class="social-name">GitHub</span><span class="social-handle">DARSHcverse ↗</span></a>
+          <a href="https://www.do-book.com" target="_blank" class="social-link"><span class="social-name">DoBook</span><span class="social-handle">do-book.com ↗</span></a>
+          <a href="https://www.photoboothwithshan.com.au" target="_blank" class="social-link"><span class="social-name">The Shan Booth</span><span class="social-handle">photoboothwithshan.com.au ↗</span></a>
+        </div>
+      </div>
+
+      <!-- FORMSPREE-powered form -->
+      <!-- 
+        HOW TO ACTIVATE EMAIL:
+        1. Go to https://formspree.io and sign up (free)
+        2. Create a new form → copy your Form ID (looks like "xpwzabcd")
+        3. Replace YOUR_FORM_ID below with your actual ID
+        Then every submission will be emailed to you automatically!
+      -->
+      <div class="reveal">
+        <form class="cform" id="contactForm" action="https://formspree.io/f/xpqjnneb" method="POST">
+          <div class="cfield"><label>name</label><input type="text" name="name" placeholder="Your name" required/></div>
+          <div class="cfield"><label>email</label><input type="email" name="email" placeholder="your@email.com" required/></div>
+          <div class="cfield"><label>subject</label><input type="text" name="subject" placeholder="Role, project, or hello"/></div>
+          <div class="cfield"><label>message</label><textarea name="message" placeholder="What are you working on?"></textarea></div>
+          <div class="form-foot">
+            <span class="form-note" id="formNote">Based in Melbourne.</span>
+            <button type="submit" class="btn btn-fill" id="submitBtn">Send →</button>
+          </div>
+        </form>
+        <div class="form-success" id="formSuccess">✓ Message sent — I'll get back to you soon.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 Darshan Subramaniam</span>
+    <a href="#hero" class="footer-back">back to top ↑</a>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); } });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Active nav
+  const secs = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    secs.forEach(s => { if(window.scrollY >= s.offsetTop - 80) cur = s.id; });
+    links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + cur));
+  }, { passive: true });
+
+  // Formspree AJAX submit — stays on page, shows success message
+  const form = document.getElementById('contactForm');
+  const successMsg = document.getElementById('formSuccess');
+  const submitBtn = document.getElementById('submitBtn');
+  const formNote = document.getElementById('formNote');
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    submitBtn.textContent = 'Sending...';
+    submitBtn.style.opacity = '0.7';
+
+    const data = new FormData(form);
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        form.style.display = 'none';
+        successMsg.style.display = 'block';
+      } else {
+        submitBtn.textContent = 'Error — try again';
+        submitBtn.style.background = '#991b1b';
+        submitBtn.style.opacity = '1';
+      }
+    } catch(err) {
+      formNote.textContent = 'Network error. Try LinkedIn instead.';
+      submitBtn.textContent = 'Send →';
+      submitBtn.style.opacity = '1';
+    }
+  });
+</script>
+</body>
+</html>
