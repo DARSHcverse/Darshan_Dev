@@ -109,6 +109,7 @@
   .btn-fill:hover { background: var(--blue-dim); box-shadow: 0 0 30px var(--glow); }
   .btn-ghost { color: var(--mid); border-bottom: 1px solid var(--faint); padding-bottom: 2px; background: none; }
   .btn-ghost:hover { color: var(--black); border-color: var(--black); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 
   /* HERO PHOTO */
   .hero-photo { position: relative; overflow: hidden; height: calc(100vh - var(--nav-h)); height: calc(100svh - var(--nav-h) - env(safe-area-inset-top, 0px)); }
@@ -682,18 +683,18 @@
           HOW TO ACTIVATE EMAIL:
           1. Go to https://formspree.io and sign up (free)
           2. Create a new form → copy your Form ID (looks like "xpwzabcd")
-          3. Replace YOUR_FORM_ID below with your actual ID
-          Then every submission will be emailed to you automatically!
+          3. In Vercel, add FORMSPREE_FORM_ID with that value and redeploy
+          Then every submission will be emailed to you automatically.
         -->
         <div class="reveal">
-          <form class="cform" id="contactForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <form class="cform" id="contactForm" action="" data-form-base="https://formspree.io/f/" method="POST">
             <div class="cfield"><label>name</label><input type="text" name="name" placeholder="Your name" required/></div>
             <div class="cfield"><label>email</label><input type="email" name="email" placeholder="your@email.com" required/></div>
             <div class="cfield"><label>subject</label><input type="text" name="subject" placeholder="Role, project, or hello"/></div>
             <div class="cfield"><label>message</label><textarea name="message" placeholder="What are you working on?"></textarea></div>
             <div class="form-foot">
-              <span class="form-note" id="formNote">Based in Melbourne.</span>
-              <button type="submit" class="btn btn-fill" id="submitBtn">Send →</button>
+              <span class="form-note" id="formNote">Loading contact form…</span>
+              <button type="submit" class="btn btn-fill" id="submitBtn" disabled>Send →</button>
             </div>
           </form>
           <div class="form-success" id="formSuccess">✓ Message sent — I'll get back to you soon.</div>
@@ -1097,11 +1098,56 @@
   const successMsg = document.getElementById('formSuccess');
   const submitBtn = document.getElementById('submitBtn');
   const formNote = document.getElementById('formNote');
+  const formBase = form.dataset.formBase;
+
+  const resetSubmitButton = () => {
+    submitBtn.textContent = 'Send →';
+    submitBtn.style.opacity = '1';
+    submitBtn.style.background = '';
+  };
+
+  const setFormReady = (formId) => {
+    form.action = `${formBase}${formId}`;
+    form.dataset.ready = 'true';
+    formNote.textContent = 'Based in Melbourne.';
+    submitBtn.disabled = false;
+    resetSubmitButton();
+  };
+
+  const setFormUnavailable = (message) => {
+    form.action = '';
+    form.dataset.ready = 'false';
+    formNote.textContent = message;
+    submitBtn.disabled = true;
+    resetSubmitButton();
+  };
+
+  (async () => {
+    try {
+      const res = await fetch('/api/formspree-config', {
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!res.ok) throw new Error('Config endpoint error');
+
+      const { formId } = await res.json();
+      if (!formId) throw new Error('Missing Formspree ID');
+
+      setFormReady(formId);
+    } catch (err) {
+      setFormUnavailable('Contact form is not configured yet. Use LinkedIn or email.');
+    }
+  })();
 
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
+    if (form.dataset.ready !== 'true' || !form.action) {
+      setFormUnavailable('Contact form is not configured yet. Use LinkedIn or email.');
+      return;
+    }
+
     submitBtn.textContent = 'Sending...';
     submitBtn.style.opacity = '0.7';
+    submitBtn.disabled = true;
 
     const data = new FormData(form);
     try {
@@ -1114,14 +1160,16 @@
         form.style.display = 'none';
         successMsg.style.display = 'block';
       } else {
+        formNote.textContent = 'Submission failed. Try LinkedIn or email.';
         submitBtn.textContent = 'Error — try again';
         submitBtn.style.background = '#991b1b';
         submitBtn.style.opacity = '1';
+        submitBtn.disabled = false;
       }
     } catch(err) {
       formNote.textContent = 'Network error. Try LinkedIn instead.';
-      submitBtn.textContent = 'Send →';
-      submitBtn.style.opacity = '1';
+      resetSubmitButton();
+      submitBtn.disabled = false;
     }
   });
 </script>
